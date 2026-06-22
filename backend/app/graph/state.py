@@ -7,6 +7,7 @@ class InterviewState(TypedDict):
     session_id: str
     position: str
     tech_stack: str
+    api_key: str
 
     questions: list[str]
     current_question_index: int

@@ -1,7 +1,7 @@
 from app.services.llm import chat
 
 
-def generate_questions(position: str, tech_stack: str, max_rounds: int = 5) -> list[str]:
+def generate_questions(position: str, tech_stack: str, max_rounds: int = 5, api_key: str = None) -> list[str]:
     """根据岗位和技术栈生成面试题目"""
     prompt = f"""你是一名资深技术面试官，需为以下岗位生成{max_rounds}道面试题：
 
@@ -16,6 +16,7 @@ def generate_questions(position: str, tech_stack: str, max_rounds: int = 5) -> l
     raw = chat(
         messages=[{"role": "user", "content": prompt}],
         temperature=0.8,
+        api_key=api_key,
     )
 
     questions = []

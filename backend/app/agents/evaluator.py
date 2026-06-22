@@ -2,7 +2,7 @@ import json
 from app.services.llm import chat
 
 
-def evaluate_answer(question: str, answer: str, position: str) -> dict:
+def evaluate_answer(question: str, answer: str, position: str, api_key: str = None) -> dict:
     """评估面试回答，返回多维评价"""
     prompt = f"""你是一名资深面试官，请评估以下面试回答：
 
@@ -32,6 +32,7 @@ def evaluate_answer(question: str, answer: str, position: str) -> dict:
     raw = chat(
         messages=[{"role": "user", "content": prompt}],
         temperature=0.3,
+        api_key=api_key,
     )
 
     try:

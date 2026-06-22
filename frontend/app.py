@@ -17,6 +17,7 @@ defaults = {
     "server_url": API_BASE,
     "position": "",
     "tech_stack": "",
+    "api_key": "",
     "messages": [],
     "evaluations": [],
     "is_finished": False,
@@ -31,10 +32,29 @@ for key, val in defaults.items():
 with st.sidebar:
     st.header("⚙️ 面试配置")
 
-    server = st.text_input("后端地址", value=st.session_state.server_url)
-    st.session_state.server_url = server
+    # ====== API Key 输入 ======
+    st.subheader("🔑 DeepSeek API Key")
+    api_key = st.text_input(
+        "输入你的 API Key",
+        value=st.session_state.api_key,
+        type="password",
+        placeholder="sk-xxxxxxxxxxxxxxxx",
+        help="在 platform.deepseek.com 注册免费获取",
+    )
+    st.session_state.api_key = api_key
+
+    if not api_key:
+        st.warning("⚠️ 请先输入 DeepSeek API Key")
+    else:
+        st.success("✅ API Key 已设置")
 
     st.divider()
+
+    # ====== 面试岗位配置 ======
+    st.subheader("📋 面试设置")
+
+    server = st.text_input("后端地址", value=st.session_state.server_url)
+    st.session_state.server_url = server
 
     position = st.text_input(
         "面试岗位",
@@ -48,7 +68,9 @@ with st.sidebar:
     )
 
     if st.button("🚀 开始面试", type="primary", use_container_width=True):
-        if not position:
+        if not st.session_state.api_key:
+            st.error("请先在侧边栏输入 DeepSeek API Key！")
+        elif not position:
             st.warning("请填写面试岗位")
         else:
             st.session_state.position = position
@@ -62,7 +84,11 @@ with st.sidebar:
                 try:
                     r = requests.post(
                         f"{server}/api/interview/create",
-                        json={"position": position, "tech_stack": tech_stack},
+                        json={
+                            "position": position,
+                            "tech_stack": tech_stack,
+                            "api_key": st.session_state.api_key,
+                        },
                         timeout=60,
                     )
                     if r.ok:
@@ -178,9 +204,10 @@ if st.session_state.waiting_for_answer and not st.session_state.is_finished:
         st.rerun()
 
 elif not st.session_state.session_id:
-    st.info("👈 在侧边栏填写信息，点击「开始面试」启动")
+    st.info("👈 在侧边栏输入 API Key 和面试信息，点击「开始面试」启动")
 
 # ==== 快捷提示 ====
 with st.sidebar:
     st.divider()
+    st.caption("🔑 获取 Key: platform.deepseek.com → 注册 → API Keys")
     st.caption("⌨️ 快捷键：Enter 发送 | Shift+Enter 换行")

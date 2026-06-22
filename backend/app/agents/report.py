@@ -1,7 +1,7 @@
 from app.services.llm import chat
 
 
-def generate_report(position: str, tech_stack: str, evaluations: list[dict]) -> dict:
+def generate_report(position: str, tech_stack: str, evaluations: list[dict], api_key: str = None) -> dict:
     """根据所有评估记录生成面试综合报告"""
     if not evaluations:
         return {
@@ -42,6 +42,7 @@ def generate_report(position: str, tech_stack: str, evaluations: list[dict]) -> 
     raw = chat(
         messages=[{"role": "user", "content": prompt}],
         temperature=0.5,
+        api_key=api_key,
     )
 
     import json

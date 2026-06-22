@@ -14,6 +14,7 @@ _graph = build_graph()
 class CreateSessionRequest(BaseModel):
     position: str
     tech_stack: str = ""
+    api_key: str = ""
 
 
 class AnswerRequest(BaseModel):
@@ -44,6 +45,7 @@ def create_session(req: CreateSessionRequest):
         "session_id": session_id,
         "position": req.position,
         "tech_stack": req.tech_stack,
+        "api_key": req.api_key,
         "questions": [],
         "current_question_index": 0,
         "current_question": "",

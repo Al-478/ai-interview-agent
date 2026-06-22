@@ -25,6 +25,7 @@ def _generate_questions(state: InterviewState) -> InterviewState:
         position=state["position"],
         tech_stack=state["tech_stack"],
         max_rounds=5,
+        api_key=state.get("api_key"),
     )
     state["questions"] = questions
     state["current_question_index"] = 0
@@ -39,6 +40,7 @@ def _evaluate(state: InterviewState) -> InterviewState:
         question=state["current_question"],
         answer=state["user_answer"],
         position=state["position"],
+        api_key=state.get("api_key"),
     )
     state["evaluation"] = evaluation
     state["evaluations"].append(evaluation)
@@ -64,13 +66,14 @@ def _generate_report(state: InterviewState) -> InterviewState:
         position=state["position"],
         tech_stack=state["tech_stack"],
         evaluations=state["evaluations"],
+        api_key=state.get("api_key"),
     )
     state["report"] = report
     return state
 
 
 def _after_evaluate(state: InterviewState) -> str:
-    """评估后的路由：下⼀题还是生成报告"""
+    """评估后的路由：下一题还是生成报告"""
     if state["status"] == "completed":
         return "report"
     return "next"
